@@ -23,10 +23,8 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("Database database.db created.");
             }
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -42,9 +40,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table history in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -60,9 +56,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table logs in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
      
@@ -77,9 +71,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table product in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
      
@@ -95,9 +87,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table users in database.db created.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -107,9 +97,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table history in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -119,9 +107,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table logs in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -131,9 +117,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table product in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -143,9 +127,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Table users in database.db dropped.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -156,7 +138,6 @@ public class SQLite {
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -167,7 +148,6 @@ public class SQLite {
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -178,7 +158,6 @@ public class SQLite {
             Statement stmt = conn.createStatement()){
             stmt.execute(sql);
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -196,7 +175,6 @@ public class SQLite {
 //      pstmt.setString(2, password);
 //      pstmt.executeUpdate();
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -217,7 +195,6 @@ public class SQLite {
                                    rs.getString("timestamp")));
             }
         } catch (Exception ex) {
-            System.out.print(ex);
         }
         return histories;
     }
@@ -258,7 +235,6 @@ public class SQLite {
                                    rs.getFloat("price")));
             }
         } catch (Exception ex) {
-            System.out.print(ex);
         }
         return products;
     }
@@ -290,7 +266,6 @@ public class SQLite {
             stmt.execute(sql);
             
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -300,9 +275,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("User " + username + " has been deleted.");
         } catch (Exception ex) {
-            System.out.print(ex);
         }
     }
     
@@ -316,7 +289,6 @@ public class SQLite {
                                    rs.getInt("stock"),
                                    rs.getFloat("price"));
         } catch (Exception ex) {
-            System.out.print(ex);
         }
         return product;
     }
