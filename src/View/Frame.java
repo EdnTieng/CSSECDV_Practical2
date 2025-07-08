@@ -200,6 +200,7 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
+        main.currentUser = null; //Added to reset
         frameView.show(Container, "loginPnl");
     }//GEN-LAST:event_logoutBtnActionPerformed
 
@@ -245,6 +246,7 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void mainNav(){
+        updateNavigationForRole(); // Added Restriction
         frameView.show(Container, "homePnl");
     }
     
@@ -258,6 +260,18 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password, String confpass){
         main.sqlite.addUser(username, password);
+    }
+    
+    // Added roles
+    public void updateNavigationForRole() {
+        if (main.currentUser == null) return;
+
+        int role = main.currentUser.getRole();
+
+        adminBtn.setVisible(role == 5);   // Admin
+        managerBtn.setVisible(role == 4); // Manager
+        staffBtn.setVisible(role == 3);   // Staff
+        clientBtn.setVisible(role == 2);  // Client
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
