@@ -317,4 +317,27 @@ public class SQLite {
         }
         return product;
     }
+    
+    // Newly added codes from here
+    public User login(String username, String password) {
+    String sql = "SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'";
+    
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return new User(
+                    rs.getInt("id"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getInt("role"),
+                    rs.getInt("locked")
+                );
+            }
+        } catch (Exception ex) {
+            System.out.println("Login error: " + ex.getMessage());
+        }
+        return null; // Login failed
+    }
 }
