@@ -6,6 +6,9 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.WindowConstants;
 
+// Added imports
+import javax.swing.JOptionPane;
+
 public class Frame extends javax.swing.JFrame {
 
     public Frame() {
@@ -180,23 +183,39 @@ public class Frame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void adminBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminBtnActionPerformed
+        if (main.currentUser != null && main.currentUser.getRole() == 5) {
         adminHomePnl.showPnl("home");
         contentView.show(Content, "adminHomePnl");
+        } else {
+            showAccessDenied();
+        }
     }//GEN-LAST:event_adminBtnActionPerformed
 
     private void managerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_managerBtnActionPerformed
-        managerHomePnl.showPnl("home");
-        contentView.show(Content, "managerHomePnl");
+        if (main.currentUser != null && main.currentUser.getRole() == 4) {
+            managerHomePnl.showPnl("home");
+            contentView.show(Content, "managerHomePnl");
+        } else {
+            showAccessDenied();
+        }
     }//GEN-LAST:event_managerBtnActionPerformed
 
     private void staffBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffBtnActionPerformed
-        staffHomePnl.showPnl("home");
-        contentView.show(Content, "staffHomePnl");
+        if (main.currentUser != null && main.currentUser.getRole() == 3) {
+            staffHomePnl.showPnl("home");
+            contentView.show(Content, "staffHomePnl");
+        } else {
+            showAccessDenied();
+        }
     }//GEN-LAST:event_staffBtnActionPerformed
 
     private void clientBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientBtnActionPerformed
-        clientHomePnl.showPnl("home");
-        contentView.show(Content, "clientHomePnl");
+        if (main.currentUser != null && main.currentUser.getRole() == 2) {
+            clientHomePnl.showPnl("home");
+            contentView.show(Content, "clientHomePnl");
+        } else {
+            showAccessDenied();
+        }
     }//GEN-LAST:event_clientBtnActionPerformed
 
     private void logoutBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutBtnActionPerformed
@@ -246,8 +265,37 @@ public class Frame extends javax.swing.JFrame {
     }
     
     public void mainNav(){
-        updateNavigationForRole(); // Added Restriction
+        if (main.currentUser == null) {
+        loginNav();
+        return;
+        }
+
+        updateNavigationForRole();
         frameView.show(Container, "homePnl");
+
+        int role = main.currentUser.getRole();
+        switch (role) {
+            case 5: // Admin
+                adminHomePnl.showPnl("home");
+                contentView.show(Content, "adminHomePnl");
+                break;
+            case 4: // Manager
+                managerHomePnl.showPnl("home");
+                contentView.show(Content, "managerHomePnl");
+                break;
+            case 3: // Staff
+                staffHomePnl.showPnl("home");
+                contentView.show(Content, "staffHomePnl");
+                break;
+            case 2: // Client
+                clientHomePnl.showPnl("home");
+                contentView.show(Content, "clientHomePnl");
+                break;
+            default:
+                showAccessDenied(); // If unknown role
+                loginNav();         // Return to login screen
+                break;
+        }
     }
     
     public void loginNav(){
@@ -272,6 +320,11 @@ public class Frame extends javax.swing.JFrame {
         managerBtn.setVisible(role == 4); // Manager
         staffBtn.setVisible(role == 3);   // Staff
         clientBtn.setVisible(role == 2);  // Client
+    }
+    
+    // Added error
+    private void showAccessDenied() {
+        JOptionPane.showMessageDialog(this, "Access Denied: You do not have permission to view this page.", "Access Denied", JOptionPane.ERROR_MESSAGE);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
