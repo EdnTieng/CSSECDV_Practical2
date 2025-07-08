@@ -1,9 +1,13 @@
 
 package View;
 
+// Added imports
+import Model.User;
+
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
+    private int loginAttempts = 0;
     
     public Login() {
         initComponents();
@@ -83,7 +87,27 @@ public class Login extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        frame.mainNav();
+        String username = usernameFld.getText();
+        String password = passwordFld.getText();
+        
+        User user = frame.main.sqlite.login(username, password);
+        
+        if (user != null) {
+            // Login Pass
+            loginAttempts = 0; // Reset on successful login
+            frame.mainNav();  // show main navigation panel
+        } else {
+            // Login failed
+            loginAttempts++;
+            if (loginAttempts >= 5) {
+            // Show popup error and exit app
+            javax.swing.JOptionPane.showMessageDialog(this, "Too many attempts made", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+            } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+             
+        }
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed

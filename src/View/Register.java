@@ -1,6 +1,9 @@
 
 package View;
 
+// Added imports
+import javax.swing.JOptionPane;
+
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
@@ -97,8 +100,41 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        frame.registerAction(usernameFld.getText(), passwordFld.getText(), confpassFld.getText());
+        // Everything here is new
+        
+        String username = usernameFld.getText();
+        String password = new String(passwordFld.getPassword());
+        String confirmPassword = new String(confpassFld.getPassword());
+        
+         // Password complexity check 
+        if (password.length() < 8 ||
+            !password.matches(".*[A-Za-z].*") ||
+            !password.matches(".*\\d.*") ||
+            !password.matches(".*[^A-Za-z0-9].*")) {
+
+            JOptionPane.showMessageDialog(this,
+                "Password must be at least 8 characters and include:\n- letters\n- numbers\n- symbols",
+                "Weak Password",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // Confirm password match
+        if (!password.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this,
+                "Passwords do not match.",
+                "Mismatch Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Proceed with registration
+        frame.registerAction(username, password, confirmPassword);
         frame.loginNav();
+        
+        // Clear fields after successful registration
+        usernameFld.setText("");
+        passwordFld.setText("");
+        confpassFld.setText("");
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
