@@ -11,6 +11,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+//Added imports
+import java.sql.PreparedStatement;
+
 public class SQLite {
     
     public int DEBUG_MODE = 0;
@@ -320,24 +323,29 @@ public class SQLite {
     
     // Newly added codes from here
     public User login(String username, String password) {
-    String sql = "SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'";
+    String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
     
         try (Connection conn = DriverManager.getConnection(driverURL);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                return new User(
-                    rs.getInt("id"),
-                    rs.getString("username"),
-                    rs.getString("password"),
-                    rs.getInt("role"),
-                    rs.getInt("locked")
-                );
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("role"),
+                        rs.getInt("locked")
+                    );
+                }
             }
         } catch (Exception ex) {
             System.out.println("Login error: " + ex.getMessage());
         }
+
         return null; // Login failed
     }
 }
