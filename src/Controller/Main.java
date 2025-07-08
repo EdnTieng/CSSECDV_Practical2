@@ -12,9 +12,11 @@ import java.util.Date;
 
 
 
+
 public class Main {
     
     public SQLite sqlite;
+    public User currentUser = null; // added for tracking
     
     public static void main(String[] args) {
         new Main().init();
