@@ -16,6 +16,9 @@ import java.sql.*;
 
 //Added imports
 import java.sql.PreparedStatement;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 
 public class SQLite {
     
