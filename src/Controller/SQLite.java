@@ -265,7 +265,6 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
-<<<<<<< Updated upstream
         String sql = "INSERT INTO users(username, password, role) VALUES (?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -282,26 +281,7 @@ public class SQLite {
             System.out.println("Registration failed: " + ex.getMessage());
         }
     }
-
-=======
-    String sql = "INSERT INTO users(username, password, role) VALUES (?, ?, ?)";
     
-    try (Connection conn = DriverManager.getConnection(driverURL);
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-        String hashedPassword = hashPassword(password); // Hash password
-
-        pstmt.setString(1, username);
-        pstmt.setString(2, hashedPassword);
-        pstmt.setInt(3, role); // Set role here
-        pstmt.executeUpdate();
-
-    } catch (SQLException ex) {
-        System.out.println("Registration failed: " + ex.getMessage());
-    }
-}
-    
->>>>>>> Stashed changes
     public void removeUser(String username) {
         String sql = "DELETE FROM users WHERE username='" + username + "';";
 
