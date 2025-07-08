@@ -7,6 +7,7 @@ import Model.User;
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
+    private int loginAttempts = 0;
     
     public Login() {
         initComponents();
@@ -93,10 +94,19 @@ public class Login extends javax.swing.JPanel {
         
         if (user != null) {
             // Login Pass
-        frame.mainNav();  // show main navigation panel
+            loginAttempts = 0; // Reset on successful login
+            frame.mainNav();  // show main navigation panel
         } else {
             // Login failed
+            loginAttempts++;
+            if (loginAttempts >= 5) {
+            // Show popup error and exit app
+            javax.swing.JOptionPane.showMessageDialog(this, "Too many attempts made", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+            } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+             
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 
