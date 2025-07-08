@@ -262,15 +262,16 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
-        String sql = "INSERT INTO users(username, password) VALUES(?, ?)";
+        String sql = "INSERT INTO users(username, password, role) VALUES (?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            String hashedPassword = hashPassword(password); //hash password
+            String hashedPassword = hashPassword(password); // Hash password
 
             pstmt.setString(1, username);
             pstmt.setString(2, hashedPassword);
+            pstmt.setInt(3, role); // Set role here
             pstmt.executeUpdate();
 
         } catch (SQLException ex) {
