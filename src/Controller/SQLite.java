@@ -10,6 +10,15 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
+
+//Added imports
+import java.sql.PreparedStatement;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 
 public class SQLite {
     
@@ -159,19 +168,19 @@ public class SQLite {
     }
     
     public void addUser(String username, String password) {
-        String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
-        
+        String sql = "INSERT INTO users(username, password) VALUES(?, ?)";
+
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
-            
-//      PREPARED STATEMENT EXAMPLE
-//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
-//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//      pstmt.setString(1, username);
-//      pstmt.setString(2, password);
-//      pstmt.executeUpdate();
-        } catch (Exception ex) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String hashedPassword = hashPassword(password); //hash password
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, hashedPassword);
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Registration failed: " + ex.getMessage());
         }
     }
     
@@ -256,13 +265,20 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
-        
+        String sql = "INSERT INTO users(username, password, role) VALUES (?, ?, ?)";
+
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
-            
-        } catch (Exception ex) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String hashedPassword = hashPassword(password); // Hash password
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, hashedPassword);
+            pstmt.setInt(3, role); // Set role here
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println("Registration failed: " + ex.getMessage());
         }
     }
     
@@ -292,11 +308,16 @@ public class SQLite {
     
     // Newly added codes from here
     public User login(String username, String password) {
-    String sql = "SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'";
-    
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+
         try (Connection conn = DriverManager.getConnection(driverURL);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String hashedPassword = hashPassword(password); // hash input
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, hashedPassword);
+            ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
                 return new User(
@@ -310,6 +331,31 @@ public class SQLite {
         } catch (Exception ex) {
             System.out.println("Login error: " + ex.getMessage());
         }
-        return null; // Login failed
+        return null;
     }
+
+    public static String hashPassword(String password) {
+        try {
+            System.out.println("Original password: " + password); // 👈 Print before hashing
+
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(password.getBytes());
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            String hashed = hexString.toString();
+            System.out.println("Hashed password: " + hashed); // 👈 Print after hashing
+
+            return hashed;
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
+    }
+
 }

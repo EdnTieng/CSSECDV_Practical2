@@ -89,29 +89,37 @@ public class Login extends javax.swing.JPanel {
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         String username = usernameFld.getText();
         String password = passwordFld.getText();
-        
+
         User user = frame.main.sqlite.login(username, password);
-        
+
         if (user != null) {
-            // Login Pass
-            loginAttempts = 0; // Reset on successful login
-            frame.mainNav();  // show main navigation panel
+            // Save the session
+            frame.main.currentUser = user;
+
+            // Reset attempts
+            loginAttempts = 0;
+
+            // Navigate to main page
+            frame.mainNav();  
+
         } else {
-            // Login failed
             loginAttempts++;
             if (loginAttempts >= 5) {
-            // Show popup error and exit app
-            javax.swing.JOptionPane.showMessageDialog(this, "Too many attempts made", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+                javax.swing.JOptionPane.showMessageDialog(this, "Too many attempts made", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
             } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
         }
-             
-        }
+        
+        usernameFld.setText("");
+        passwordFld.setText("");
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         frame.registerNav();
+        usernameFld.setText("");
+        passwordFld.setText("");
     }//GEN-LAST:event_registerBtnActionPerformed
 
 
